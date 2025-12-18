@@ -32,8 +32,8 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @Get('auth/logout')
+  @Post('auth/logout')
   logout(@Request() req: RequestWithUser) {
-    return req.user;
+    return { message: 'Logged out successfully', user: req.user };
   }
 }
