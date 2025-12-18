@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-
-import { UserService, User } from '../user';
 import { JwtService } from '@nestjs/jwt';
 
-type UserPayload = Omit<User, 'password'>;
+import { UserPayload, LoginResponse } from '../shared/lib/types';
+
+import { UserService } from '../user';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
     return null;
   }
 
-  login(user: UserPayload) {
+  login(user: UserPayload): LoginResponse {
     const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
