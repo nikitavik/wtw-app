@@ -15,6 +15,10 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
+  async findById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
   async create(email: string, password: string): Promise<User> {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);

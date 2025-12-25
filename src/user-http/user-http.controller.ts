@@ -117,6 +117,10 @@ export class UserHttpController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getProfile(@Request() req: RequestWithUser): UserProfileDto {
-    return req.user;
+    // JWT strategy already fetches user from database, so req.user has the latest data
+    return {
+      id: req.user.id,
+      email: req.user.email,
+    };
   }
 }
