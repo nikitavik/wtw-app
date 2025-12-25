@@ -16,6 +16,8 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
