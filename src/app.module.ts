@@ -10,6 +10,7 @@ import { UserHttpModule } from './user-http';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
+import { MovieModule } from './catalog/movie.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DatabaseModule } from './database/database.module';
     DatabaseModule,
     AuthModule,
     UserHttpModule,
+    MovieModule,
   ],
   controllers: [AppController],
   providers: [
