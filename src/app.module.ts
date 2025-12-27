@@ -13,6 +13,7 @@ import { DatabaseModule } from './database/database.module';
 import { MovieModule } from './catalog/movie.module';
 import { EventModule } from './event/event.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
+import { UserItemReactionModule } from './reaction/user-item-reaction.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { WatchlistModule } from './watchlist/watchlist.module';
     MovieModule,
     EventModule,
     WatchlistModule,
+    UserItemReactionModule,
   ],
   controllers: [AppController],
   providers: [
