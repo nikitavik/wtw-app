@@ -11,6 +11,8 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { MovieModule } from './catalog/movie.module';
+import { EventModule } from './event/event.module';
+import { WatchlistModule } from './watchlist/watchlist.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MovieModule } from './catalog/movie.module';
     AuthModule,
     UserHttpModule,
     MovieModule,
+    EventModule,
+    WatchlistModule,
   ],
   controllers: [AppController],
   providers: [
