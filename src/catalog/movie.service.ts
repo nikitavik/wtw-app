@@ -40,6 +40,7 @@ export class MovieService {
   }
 
   async findAll(
+    userId: string,
     options: PaginationOptions = {},
   ): Promise<PaginatedMoviesResponse> {
     const { page = 1, limit = 20 } = options;
@@ -52,6 +53,12 @@ export class MovieService {
     // Build query with pagination
     const query = this.movieRepository
       .createQueryBuilder('movie')
+      .leftJoinAndSelect(
+        'movie.reactions',
+        'reactions',
+        'reactions.user_id = :userId',
+        { userId },
+      )
       .limit(limit)
       .offset(offset);
 

@@ -21,11 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { UserItemReactionService } from './user-item-reaction.service';
 import { UserItemReactionResponseDto } from './user-item-reaction.dto';
-import type { UserPayload } from '../shared/lib/types';
-
-interface RequestWithUser extends Request {
-  user: UserPayload;
-}
+import type { RequestWithUser } from '../shared/lib/types';
 
 @ApiTags('reactions')
 @Controller('reactions')

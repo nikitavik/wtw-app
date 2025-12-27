@@ -5,6 +5,7 @@ import {
   Query,
   ParseIntPipe,
   DefaultValuePipe,
+  Request,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,7 @@ import {
   MovieCountResponse,
 } from './movie.dto';
 import { Movie } from './movie.entity';
+import type { RequestWithUser } from '../shared/lib/types';
 
 @ApiTags('movies')
 @Controller('movies')
@@ -60,6 +62,7 @@ export class MovieController {
     type: PaginatedMoviesResponse,
   })
   async findAll(
+    @Request() req: RequestWithUser,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('title') title?: string,
@@ -73,7 +76,7 @@ export class MovieController {
       return this.movieService.findByTitle(title, paginationOptions);
     }
 
-    return this.movieService.findAll(paginationOptions);
+    return this.movieService.findAll(req.user.id, paginationOptions);
   }
 
   @Get('count')

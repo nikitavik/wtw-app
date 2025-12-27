@@ -27,12 +27,8 @@ import {
 } from './user-http.dto';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import type { UserPayload } from '../shared/lib/types';
+import type { RequestWithUser } from '../shared/lib/types';
 import { AuthService } from 'src/auth/auth.service';
-
-interface RequestWithUser extends Request {
-  user: UserPayload;
-}
 
 @ApiTags('user')
 @Controller('user')

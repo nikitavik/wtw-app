@@ -21,11 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { WatchlistService } from './watchlist.service';
 import { AddWatchlistItemDto, WatchlistItemResponseDto } from './watchlist.dto';
-import type { UserPayload } from '../shared/lib/types';
-
-interface RequestWithUser extends Request {
-  user: UserPayload;
-}
+import type { RequestWithUser } from '../shared/lib/types';
 
 @ApiTags('watchlist')
 @Controller('watchlist')

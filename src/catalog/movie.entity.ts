@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, JoinColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserItemReaction } from 'src/reaction';
 
 @Entity('movies')
 export class Movie {
@@ -182,4 +183,7 @@ export class Movie {
   })
   @Column({ type: 'text', nullable: true })
   spoken_languages: string;
+
+  @OneToMany(() => UserItemReaction, (reaction) => reaction.movie)
+  reactions: UserItemReaction[];
 }
