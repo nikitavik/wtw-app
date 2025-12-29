@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, Min } from 'class-validator';
 import { Movie } from './movie.entity';
 
 export class PaginationOptions {
@@ -9,6 +11,9 @@ export class PaginationOptions {
     required: false,
     default: 1,
   })
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
   page?: number;
 
   @ApiProperty({
@@ -19,6 +24,9 @@ export class PaginationOptions {
     required: false,
     default: 20,
   })
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
   limit?: number;
 }
 

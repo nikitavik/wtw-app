@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsEnum, IsInt, Min } from 'class-validator';
 import { EventSource } from '../event/event-source.enum';
 
 export class AddWatchlistItemDto {
@@ -6,6 +8,8 @@ export class AddWatchlistItemDto {
     description: 'Movie ID',
     example: 550,
   })
+  @Type(() => Number)
+  @IsInt()
   item_id: number;
 
   @ApiProperty({
@@ -13,6 +17,7 @@ export class AddWatchlistItemDto {
     enum: EventSource,
     example: EventSource.CATALOG,
   })
+  @IsEnum(EventSource)
   source: EventSource;
 }
 
@@ -21,6 +26,8 @@ export class RemoveWatchlistItemDto {
     description: 'Movie ID',
     example: 550,
   })
+  @Type(() => Number)
+  @IsInt()
   item_id: number;
 }
 
