@@ -111,7 +111,10 @@ export class MovieController {
     type: Movie,
   })
   @ApiNotFoundResponse({ description: 'Movie not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
-    return this.movieService.findOne(id);
+  async findOne(
+    @Request() req: RequestWithUser,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Movie> {
+    return this.movieService.findOne(req.user.id, id);
   }
 }

@@ -1,18 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
+
 import { Movie } from './movie.entity';
 import type {
   PaginationOptions,
   PaginationMeta,
   PaginatedMoviesResponse,
 } from './movie.dto';
+import { EventType } from 'src/event/event-type.enum';
+import { UserEventDto } from 'src/event/user-event.dto';
+import { EventSource } from 'src/event';
 
 @Injectable()
 export class MovieService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private createPaginationMeta(
@@ -69,11 +75,21 @@ export class MovieService {
     return { data, meta };
   }
 
-  async findOne(id: number): Promise<Movie> {
+  async findOne(userId: string, id: number): Promise<Movie> {
     const movie = await this.movieRepository.findOne({ where: { id } });
     if (!movie) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
+
+    const userEvent: UserEventDto = {
+      user_id: userId,
+      item_id: id,
+      event_type: EventType.VIEW,
+      event_value: null,
+      source: EventSource.CATALOG,
+    };
+
+    this.eventEmitter.emit('userEvent.view', userEvent);
     return movie;
   }
 
