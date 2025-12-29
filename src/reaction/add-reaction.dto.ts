@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { EventSource } from '../event/event-source.enum';
 
 export class AddReactionDto {
@@ -8,6 +8,7 @@ export class AddReactionDto {
     enum: EventSource,
     example: EventSource.CATALOG,
   })
-  @IsEnum(EventSource)
+  @IsNotEmpty({ message: 'Source is required' })
+  @IsEnum(EventSource, { message: 'Source must be a valid EventSource' })
   source: EventSource;
 }
