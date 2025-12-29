@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ReactionType } from './reaction-type.enum';
+import { EventSource } from '../event/event-source.enum';
 
 export class UserItemReactionResponseDto {
   @ApiProperty({ description: 'Reaction ID', example: 1 })
@@ -17,6 +18,13 @@ export class UserItemReactionResponseDto {
     example: ReactionType.LIKE,
   })
   reaction: ReactionType;
+
+  @ApiProperty({
+    description: 'Source',
+    enum: EventSource,
+    example: EventSource.CATALOG,
+  })
+  source: EventSource;
 
   @ApiProperty({
     description: 'Updated at timestamp',

@@ -12,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../user/user.entity';
 import { Movie } from '../catalog/movie.entity';
 import { ReactionType } from './reaction-type.enum';
+import { EventSource } from '../event/event-source.enum';
 
 @Entity('user_item_reactions')
 @Unique(['user_id', 'item_id'])
@@ -39,6 +40,18 @@ export class UserItemReaction {
     default: ReactionType.LIKE,
   })
   reaction: ReactionType;
+
+  @ApiProperty({
+    description: 'Source',
+    enum: EventSource,
+    example: EventSource.CATALOG,
+  })
+  @Column({
+    type: 'enum',
+    enum: EventSource,
+    default: EventSource.CATALOG,
+  })
+  source: EventSource;
 
   @ApiProperty({
     description: 'Updated at timestamp',

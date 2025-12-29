@@ -4,6 +4,7 @@ import {
   Get,
   Delete,
   Request,
+  Body,
   HttpCode,
   HttpStatus,
   Param,
@@ -13,6 +14,7 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
+  ApiBody,
   ApiBearerAuth,
   ApiUnauthorizedResponse,
   ApiParam,
@@ -20,6 +22,7 @@ import {
   ApiConflictResponse,
 } from '@nestjs/swagger';
 import { UserItemReactionService } from './user-item-reaction.service';
+import { AddReactionDto } from './add-reaction.dto';
 import { UserItemReactionResponseDto } from './user-item-reaction.dto';
 import type { RequestWithUser } from '../shared/lib/types';
 
@@ -50,6 +53,7 @@ export class UserItemReactionController {
       user_id: reaction.user_id,
       item_id: reaction.item_id,
       reaction: reaction.reaction,
+      source: reaction.source,
       updated_at: reaction.updated_at,
     }));
   }
@@ -66,6 +70,7 @@ export class UserItemReactionController {
     description: 'Movie ID',
     example: 550,
   })
+  @ApiBody({ type: AddReactionDto })
   @ApiResponse({
     status: 200,
     description: 'Like added successfully',
@@ -75,14 +80,20 @@ export class UserItemReactionController {
   async addLike(
     @Request() req: RequestWithUser,
     @Param('item_id', ParseIntPipe) item_id: number,
+    @Body() addDto: AddReactionDto,
   ): Promise<UserItemReactionResponseDto> {
-    const reaction = await this.reactionService.addLike(req.user.id, item_id);
+    const reaction = await this.reactionService.addLike(
+      req.user.id,
+      item_id,
+      addDto.source,
+    );
 
     return {
       id: reaction.id,
       user_id: reaction.user_id,
       item_id: reaction.item_id,
       reaction: reaction.reaction,
+      source: reaction.source,
       updated_at: reaction.updated_at,
     };
   }
@@ -126,6 +137,7 @@ export class UserItemReactionController {
     description: 'Movie ID',
     example: 550,
   })
+  @ApiBody({ type: AddReactionDto })
   @ApiResponse({
     status: 200,
     description: 'Dislike added successfully',
@@ -135,10 +147,12 @@ export class UserItemReactionController {
   async addDislike(
     @Request() req: RequestWithUser,
     @Param('item_id', ParseIntPipe) item_id: number,
+    @Body() addDto: AddReactionDto,
   ): Promise<UserItemReactionResponseDto> {
     const reaction = await this.reactionService.addDislike(
       req.user.id,
       item_id,
+      addDto.source,
     );
 
     return {
@@ -146,6 +160,7 @@ export class UserItemReactionController {
       user_id: reaction.user_id,
       item_id: reaction.item_id,
       reaction: reaction.reaction,
+      source: reaction.source,
       updated_at: reaction.updated_at,
     };
   }
