@@ -10,11 +10,13 @@ import { MovieModule } from './catalog/movie.module';
 import { EventBusModule } from './event/event-bus.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
 import { UserItemReactionModule } from './reaction/user-item-reaction.module';
+import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
     CoreModule,
     EventBusModule,
+    QueuesModule,
     UserHttpModule,
     MovieModule,
     WatchlistModule,
