@@ -1,4 +1,20 @@
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: wtw-redis-dev
+    mem_limit: 128m
+    memswap_limit: 256m
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
@@ -16,10 +32,17 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: wtw_app
       DB_SYNCHRONIZE: "true"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     command: npm run start:dev
+
+volumes:
+  redis_data_dev:
 
