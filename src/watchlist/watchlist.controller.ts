@@ -22,6 +22,8 @@ import {
 import { WatchlistService } from './watchlist.service';
 import { AddWatchlistItemDto, WatchlistItemResponseDto } from './watchlist.dto';
 import type { RequestWithUser } from '../shared/lib/types';
+import type { MovieResponse } from '../catalog/movie.dto';
+import { Movie } from '../catalog/movie.entity';
 
 @ApiTags('watchlist')
 @Controller('watchlist')
@@ -37,11 +39,10 @@ export class WatchlistController {
   @ApiResponse({
     status: 200,
     description: 'Watchlist retrieved successfully',
+    type: [Movie],
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async get(
-    @Request() req: RequestWithUser,
-  ): Promise<WatchlistItemResponseDto[]> {
+  async get(@Request() req: RequestWithUser): Promise<MovieResponse[]> {
     return this.watchlistService.getWatchlist(req.user.id);
   }
 

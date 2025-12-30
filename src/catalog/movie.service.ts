@@ -50,9 +50,12 @@ export class MovieService {
     const { watchlistItems, reactions, ...movieData } = movie;
     const reaction =
       reactions && reactions.length > 0 ? reactions[0].reaction : null;
+    const inWatchlist = Boolean(watchlistItems && watchlistItems.length > 0);
+
     return {
       ...movieData,
-      inWatchlist: Boolean(watchlistItems && watchlistItems.length > 0),
+      inWatchlist,
+      isInWatchlist: inWatchlist,
       reaction,
     };
   }
