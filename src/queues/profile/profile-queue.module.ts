@@ -15,4 +15,3 @@ import { ProfileProcessor } from './profile.processor';
   exports: [ProfileQueue],
 })
 export class ProfileQueueModule {}
-

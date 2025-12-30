@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, Min } from 'class-validator';
+import { IsEnum, IsInt } from 'class-validator';
 import { EventSource } from '../event/event-source.enum';
 
 export class AddWatchlistItemDto {
