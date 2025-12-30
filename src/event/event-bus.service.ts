@@ -16,9 +16,7 @@ export class EventBusService {
   @OnEvent('userEvent.*', { async: true })
   async handleUserEvent(payload: UserEventDto): Promise<UserEvent> {
     const userEvent = this.userEventRepository.create(payload);
-    console.log('handleUserEvent', userEvent);
     const savedEvent = await this.userEventRepository.save(userEvent);
-    console.log('savedEvent', savedEvent);
     return savedEvent;
   }
 

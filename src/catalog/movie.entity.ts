@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryColumn, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserItemReaction } from 'src/reaction';
+import { WatchlistItem } from 'src/watchlist/watchlist-item.entity';
+import { ReactionType } from 'src/reaction/reaction-type.enum';
 
 @Entity('movies')
 export class Movie {
@@ -186,4 +188,23 @@ export class Movie {
 
   @OneToMany(() => UserItemReaction, (reaction) => reaction.movie)
   reactions: UserItemReaction[];
+
+  @OneToMany(() => WatchlistItem, (watchlistItem) => watchlistItem.movie)
+  watchlistItems: WatchlistItem[];
+
+  @ApiProperty({
+    description: "Whether the movie is in the user's watchlist",
+    example: true,
+    required: true,
+  })
+  inWatchlist: boolean;
+
+  @ApiProperty({
+    description: "User's reaction to the movie",
+    enum: ReactionType,
+    example: ReactionType.LIKE,
+    nullable: true,
+    required: true,
+  })
+  reaction: ReactionType | null;
 }

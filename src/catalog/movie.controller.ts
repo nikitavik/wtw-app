@@ -20,6 +20,7 @@ import {
   PaginationOptions,
   PaginatedMoviesResponse,
   MovieCountResponse,
+  MovieResponse,
 } from './movie.dto';
 import { Movie } from './movie.entity';
 import type { RequestWithUser } from '../shared/lib/types';
@@ -73,7 +74,11 @@ export class MovieController {
     };
 
     if (title) {
-      return this.movieService.findByTitle(title, paginationOptions);
+      return this.movieService.findByTitle(
+        req.user.id,
+        title,
+        paginationOptions,
+      );
     }
 
     return this.movieService.findAll(req.user.id, paginationOptions);
@@ -114,7 +119,7 @@ export class MovieController {
   async findOne(
     @Request() req: RequestWithUser,
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Movie> {
+  ): Promise<MovieResponse> {
     return this.movieService.findOne(req.user.id, id);
   }
 }

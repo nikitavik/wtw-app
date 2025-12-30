@@ -8,6 +8,7 @@ import type {
   PaginationOptions,
   PaginationMeta,
   PaginatedMoviesResponse,
+  MovieResponse,
 } from './movie.dto';
 import { EventType } from 'src/event/event-type.enum';
 import { UserEventDto } from 'src/event/user-event.dto';
@@ -45,6 +46,17 @@ export class MovieService {
     return (page - 1) * limit;
   }
 
+  private transformMovie(movie: Movie): MovieResponse {
+    const { watchlistItems, reactions, ...movieData } = movie;
+    const reaction =
+      reactions && reactions.length > 0 ? reactions[0].reaction : null;
+    return {
+      ...movieData,
+      inWatchlist: Boolean(watchlistItems && watchlistItems.length > 0),
+      reaction,
+    };
+  }
+
   async findAll(
     userId: string,
     options: PaginationOptions = {},
@@ -65,18 +77,45 @@ export class MovieService {
         'reactions.user_id = :userId',
         { userId },
       )
+      .leftJoinAndSelect(
+        'movie.watchlistItems',
+        'watchlistItems',
+        'watchlistItems.user_id = :userId',
+        { userId },
+      )
       .limit(limit)
       .offset(offset);
 
-    const data = await query.getMany();
+    const movies = await query.getMany();
+
+    // Transform movies to add inWatchlist flag and remove watchlistItems
+    const data: MovieResponse[] = movies.map((movie) =>
+      this.transformMovie(movie),
+    );
 
     const meta = this.createPaginationMeta(totalItems, limit, page);
 
-    return { data, meta };
+    return { data, meta } as PaginatedMoviesResponse;
   }
 
-  async findOne(userId: string, id: number): Promise<Movie> {
-    const movie = await this.movieRepository.findOne({ where: { id } });
+  async findOne(userId: string, id: number): Promise<MovieResponse> {
+    const movie = await this.movieRepository
+      .createQueryBuilder('movie')
+      .leftJoinAndSelect(
+        'movie.reactions',
+        'reactions',
+        'reactions.user_id = :userId',
+        { userId },
+      )
+      .leftJoinAndSelect(
+        'movie.watchlistItems',
+        'watchlistItems',
+        'watchlistItems.user_id = :userId',
+        { userId },
+      )
+      .where('movie.id = :id', { id })
+      .getOne();
+
     if (!movie) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
@@ -90,10 +129,11 @@ export class MovieService {
     };
 
     this.eventEmitter.emit('userEvent.view', userEvent);
-    return movie;
+    return this.transformMovie(movie);
   }
 
   async findByTitle(
+    userId: string,
     title: string,
     options: PaginationOptions = {},
   ): Promise<PaginatedMoviesResponse> {
@@ -106,18 +146,35 @@ export class MovieService {
       .where('LOWER(movie.title) LIKE LOWER(:title)', { title: `%${title}%` })
       .getCount();
 
-    // Build paginated query
+    // Build paginated query with watchlist check
     const query = this.movieRepository
       .createQueryBuilder('movie')
+      .leftJoinAndSelect(
+        'movie.reactions',
+        'reactions',
+        'reactions.user_id = :userId',
+        { userId },
+      )
+      .leftJoinAndSelect(
+        'movie.watchlistItems',
+        'watchlistItems',
+        'watchlistItems.user_id = :userId',
+        { userId },
+      )
       .where('LOWER(movie.title) LIKE LOWER(:title)', { title: `%${title}%` })
       .limit(limit)
       .offset(offset);
 
-    const data = await query.getMany();
+    const movies = await query.getMany();
+
+    // Transform movies to add inWatchlist flag and remove watchlistItems
+    const data: MovieResponse[] = movies.map((movie) =>
+      this.transformMovie(movie),
+    );
 
     const meta = this.createPaginationMeta(totalItems, limit, page);
 
-    return { data, meta };
+    return { data, meta } as PaginatedMoviesResponse;
   }
 
   async count(): Promise<number> {

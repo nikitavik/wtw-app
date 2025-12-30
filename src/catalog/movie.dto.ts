@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 import { Movie } from './movie.entity';
+import { ReactionType } from '../reaction/reaction-type.enum';
+
+export type MovieResponse = Omit<Movie, 'watchlistItems' | 'reactions'> & {
+  inWatchlist: boolean;
+  reaction: ReactionType | null;
+};
 
 export class PaginationOptions {
   @ApiProperty({
@@ -79,7 +85,7 @@ export class PaginatedMoviesResponse {
     description: 'Array of movies',
     type: [Movie],
   })
-  data: Movie[];
+  data: MovieResponse[];
 
   @ApiProperty({
     description: 'Pagination metadata',
