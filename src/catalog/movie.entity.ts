@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserItemReaction } from 'src/reaction';
-import { WatchlistItem } from 'src/watchlist/watchlist-item.entity';
-import { ReactionType } from 'src/reaction/reaction-type.enum';
+import { UserItemReaction } from '../reaction/user-item-reaction.entity';
+import { WatchlistItem } from '../watchlist/watchlist-item.entity';
+import { ReactionType } from '../reaction/reaction-type.enum';
 
 @Entity('movies')
 export class Movie {

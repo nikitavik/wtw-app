@@ -6,6 +6,8 @@ import {
   Request,
   UseGuards,
   ConflictException,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,6 +17,7 @@ import {
   ApiBearerAuth,
   ApiUnauthorizedResponse,
   ApiConflictResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import {
@@ -24,11 +27,13 @@ import {
   RegisterResponseDto,
   LogoutResponseDto,
   UserProfileDto,
+  ProfileAggregationResponseDto,
 } from './user-http.dto';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import type { RequestWithUser } from '../shared/lib/types';
 import { AuthService } from 'src/auth/auth.service';
+import { ProfileAggregationService } from '../profile/profile-aggregation.service';
 
 @ApiTags('user')
 @Controller('user')
@@ -36,6 +41,7 @@ export class UserHttpController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly profileAggregationService: ProfileAggregationService,
   ) {}
 
   @Public()
@@ -118,5 +124,37 @@ export class UserHttpController {
       id: req.user.id,
       email: req.user.email,
     };
+  }
+
+  @Get('profile/aggregate')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Test profile aggregation',
+    description:
+      'Aggregate user profile based on events, reactions, and watchlist items',
+  })
+  @ApiQuery({
+    name: 'windowDays',
+    required: false,
+    type: Number,
+    description: 'Aggregation window in days (default: 90)',
+    example: 90,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile aggregated successfully',
+    type: ProfileAggregationResponseDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  async aggregateProfile(
+    @Request() req: RequestWithUser,
+    @Query('windowDays', new ParseIntPipe({ optional: true }))
+    windowDays?: number,
+  ): Promise<ProfileAggregationResponseDto> {
+    const profile = await this.profileAggregationService.aggregateProfile(
+      req.user.id,
+      windowDays,
+    );
+    return profile;
   }
 }
