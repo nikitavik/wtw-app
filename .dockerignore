@@ -19,10 +19,8 @@ test
 *.spec.ts
 *.test.ts
 *.test.js
-coverage
 README.md
 docker-compose*.yml
 Dockerfile*
 .dockerignore
-docker/.dockerignore
 
