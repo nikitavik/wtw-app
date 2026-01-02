@@ -197,7 +197,7 @@ export class Movie {
     example: true,
     required: true,
   })
-  inWatchlist: boolean;
+  isInWatchlist: boolean;
 
   @ApiProperty({
     description: "User's reaction to the movie",

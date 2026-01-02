@@ -50,12 +50,11 @@ export class MovieService {
     const { watchlistItems, reactions, ...movieData } = movie;
     const reaction =
       reactions && reactions.length > 0 ? reactions[0].reaction : null;
-    const inWatchlist = Boolean(watchlistItems && watchlistItems.length > 0);
+    const isInWatchlist = Boolean(watchlistItems && watchlistItems.length > 0);
 
     return {
       ...movieData,
-      inWatchlist,
-      isInWatchlist: inWatchlist,
+      isInWatchlist,
       reaction,
     };
   }
@@ -91,7 +90,7 @@ export class MovieService {
 
     const movies = await query.getMany();
 
-    // Transform movies to add inWatchlist flag and remove watchlistItems
+    // Transform movies to add isInWatchlist flag and remove watchlistItems
     const data: MovieResponse[] = movies.map((movie) =>
       this.transformMovie(movie),
     );
@@ -170,7 +169,7 @@ export class MovieService {
 
     const movies = await query.getMany();
 
-    // Transform movies to add inWatchlist flag and remove watchlistItems
+    // Transform movies to add isInWatchlist flag and remove watchlistItems
     const data: MovieResponse[] = movies.map((movie) =>
       this.transformMovie(movie),
     );

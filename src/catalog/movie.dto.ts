@@ -5,7 +5,6 @@ import { Movie } from './movie.entity';
 import { ReactionType } from '../reaction/reaction-type.enum';
 
 export type MovieResponse = Omit<Movie, 'watchlistItems' | 'reactions'> & {
-  inWatchlist: boolean;
   isInWatchlist: boolean;
   reaction: ReactionType | null;
 };
