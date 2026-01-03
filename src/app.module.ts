@@ -11,6 +11,7 @@ import { EventBusModule } from './event/event-bus.module';
 import { WatchlistModule } from './watchlist/watchlist.module';
 import { UserItemReactionModule } from './reaction/user-item-reaction.module';
 import { QueuesModule } from './queues/queues.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { QueuesModule } from './queues/queues.module';
     MovieModule,
     WatchlistModule,
     UserItemReactionModule,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
