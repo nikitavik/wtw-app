@@ -40,11 +40,12 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     container_name: wtw-backend
-    mem_limit: 256m
-    memswap_limit: 512m
+    mem_limit: 512m
+    memswap_limit: 1g
     environment:
       PORT: 3000
       NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=384
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: postgres
